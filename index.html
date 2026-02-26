@@ -1,1 +1,565 @@
-<!doctype html> <html lang="en"> <head> <meta charset="UTF-8" /> <link rel="icon" type="image/svg+xml" href="/vite.svg" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <title>BarberBook</title> </head> <body> <div id="root"></div> <script type="module" src="/src/main.tsx"></script> </body> </html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shopping da Mulher - Produtos de Beleza</title>
+
+  <!-- Tailwind (estável para GitHub Pages) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons -->
+  <script defer src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Fonte -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --rosa-principal: #e91e63;
+      --rosa-escuro: #c2185b;
+      --rosa-fundo: #fff0f5;
+      --dourado: #d4a017;
+      --dourado-escuro: #b8860b;
+    }
+
+    body { font-family: 'Poppins', sans-serif; }
+
+    .gradient-text {
+      background: linear-gradient(135deg, var(--rosa-principal), var(--dourado));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .gradient-bg { background: linear-gradient(135deg, var(--rosa-principal), var(--rosa-escuro)); }
+
+    .gradient-border {
+      border: 2px solid transparent;
+      background:
+        linear-gradient(white, white) padding-box,
+        linear-gradient(135deg, var(--rosa-principal), var(--dourado)) border-box;
+    }
+
+    .hero-pattern {
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e91e63' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .text-rosa { color: var(--rosa-principal); }
+    .bg-rosa-fundo { background-color: var(--rosa-fundo); }
+
+    .card-hover { transition: all 0.3s ease; }
+    .card-hover:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(233, 30, 99, 0.15);
+    }
+
+    .btn-pulse { animation: pulse 2s infinite; }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    .whatsapp-float { animation: bounce 2s infinite; }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .nav-link { position: relative; }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #e91e63, #c9a227);
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after { width: 100%; }
+
+    .product-image { aspect-ratio: 1; object-fit: cover; }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+    .modal.active { display: flex; }
+    .modal-content {
+      background: white;
+      border-radius: 16px;
+      max-width: 560px;
+      width: 100%;
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50">
+
+  <!-- Header -->
+  <header class="bg-white py-4 px-4 shadow-sm">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <!-- Troque a logo quando quiser -->
+        <img
+          src="https://i.imgur.com/placeholder-logo.png"
+          alt="Shopping da Mulher - Logo"
+          class="h-16 md:h-20 w-auto object-contain"
+          id="logoImage"
+        />
+        <div class="hidden md:block">
+          <p class="text-sm text-gray-500 font-medium">Beleza Feminina com Segurança</p>
+        </div>
+      </div>
+
+      <button id="menuBtn" class="lg:hidden p-2 text-rosa" aria-label="Abrir menu">
+        <i data-lucide="menu" class="w-8 h-8"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  <nav class="gradient-bg shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="hidden lg:flex justify-center gap-8 py-4">
+        <a href="#loja" class="nav-link text-white/90 hover:text-white font-semibold text-lg flex items-center gap-2">
+          <i data-lucide="store" class="w-5 h-5"></i>
+          Loja
+        </a>
+        <a href="#politica" class="nav-link text-white/90 hover:text-white font-semibold text-lg flex items-center gap-2">
+          <i data-lucide="truck" class="w-5 h-5"></i>
+          Política de Entrega
+        </a>
+        <a href="#cod" class="nav-link text-white/90 hover:text-white font-semibold text-lg flex items-center gap-2">
+          <i data-lucide="help-circle" class="w-5 h-5"></i>
+          Sobre COD
+        </a>
+        <a href="#contato" class="nav-link text-white/90 hover:text-white font-semibold text-lg flex items-center gap-2">
+          <i data-lucide="phone" class="w-5 h-5"></i>
+          Contato
+        </a>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div id="mobileMenu" class="lg:hidden hidden py-4 space-y-3">
+        <a href="#loja" class="block text-white font-semibold text-lg py-2">Loja</a>
+        <a href="#politica" class="block text-white font-semibold text-lg py-2">Política de Entrega</a>
+        <a href="#cod" class="block text-white font-semibold text-lg py-2">Sobre COD</a>
+        <a href="#contato" class="block text-white font-semibold text-lg py-2">Contato</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero-pattern bg-rosa-fundo py-14 px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <div class="inline-block mb-6">
+        <span class="gradient-bg text-white px-6 py-3 rounded-full text-lg font-bold shadow-lg">
+          ✨ Ofertas e cuidados para o seu cabelo
+        </span>
+      </div>
+
+      <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+        Shopping da Mulher: <span class="gradient-text">Beleza</span> com Segurança
+      </h1>
+
+      <p class="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+        Pague só quando receber (COD) ou escolha pagamento tradicional.
+        Simples, seguro e sem complicação.
+      </p>
+
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="#loja" class="gradient-bg text-white px-10 py-5 rounded-full font-bold text-lg btn-pulse flex items-center gap-3 shadow-xl">
+          <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+          Ver Produtos
+        </a>
+
+        <a
+          href="https://wa.me/5511940012239?text=Ol%C3%A1%2C%20preciso%20de%20suporte%20para%20minhas%20d%C3%BAvidas."
+          target="_blank"
+          rel="noopener"
+          class="bg-green-500 text-white px-10 py-5 rounded-full font-bold text-lg hover:bg-green-600 transition flex items-center gap-3 shadow-xl"
+        >
+          <i data-lucide="message-circle" class="w-6 h-6"></i>
+          Falar no WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products -->
+  <section id="loja" class="py-16 px-4">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold gradient-text mb-3">Nossos Produtos</h2>
+        <p class="text-gray-600 text-lg">Escolha o produto ideal para sua beleza</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+        <!-- Produto 1 -->
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover border-2 border-transparent hover:border-pink-200">
+          <div class="relative">
+            <img
+              src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&q=80"
+              alt="Progressiva Vegetal"
+              class="product-image w-full"
+            />
+            <div class="absolute top-4 right-4 gradient-bg text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
+              ⭐ MAIS VENDIDO
+            </div>
+          </div>
+
+          <div class="p-6">
+            <h3 class="text-2xl font-bold text-gray-800 mb-3">Progressiva Vegetal</h3>
+            <p class="text-gray-600 mb-5 text-base leading-relaxed">
+              Alisa, reduz volume e dá brilho intenso já na primeira aplicação.
+              Ideal para quem quer fios mais alinhados e fáceis de cuidar.
+            </p>
+
+            <div class="space-y-3">
+              <a href="#" onclick="openCheckout('logzz','progressiva-vegetal'); return false;"
+                 class="block w-full gradient-bg text-white text-center py-4 rounded-xl font-bold text-lg hover:opacity-90 transition flex items-center justify-center gap-2 shadow-md">
+                <i data-lucide="calendar" class="w-5 h-5"></i>
+                Agendar Entrega (COD)
+              </a>
+
+              <a href="#" onclick="openCheckout('coinzz','progressiva-vegetal'); return false;"
+                 class="block w-full gradient-border text-rosa text-center py-4 rounded-xl font-bold text-lg hover:bg-rosa-fundo transition flex items-center justify-center gap-2">
+                <i data-lucide="credit-card" class="w-5 h-5"></i>
+                Comprar (Pix/Cartão)
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Produto 2 -->
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover border-2 border-transparent hover:border-pink-200">
+          <div class="relative">
+            <img
+              src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800&q=80"
+              alt="Máscara Vita A"
+              class="product-image w-full"
+            />
+          </div>
+
+          <div class="p-6">
+            <h3 class="text-2xl font-bold text-gray-800 mb-3">Máscara Vita A</h3>
+            <p class="text-gray-600 mb-5 text-base leading-relaxed">
+              Hidratação profunda e reposição de massa.
+              Perfeita para recuperar fios ressecados e quebradiços.
+            </p>
+
+            <div class="space-y-3">
+              <a href="#" onclick="openCheckout('logzz','mascara-vita-a'); return false;"
+                 class="block w-full gradient-bg text-white text-center py-4 rounded-xl font-bold text-lg hover:opacity-90 transition flex items-center justify-center gap-2 shadow-md">
+                <i data-lucide="calendar" class="w-5 h-5"></i>
+                Agendar Entrega (COD)
+              </a>
+
+              <a href="#" onclick="openCheckout('coinzz','mascara-vita-a'); return false;"
+                 class="block w-full gradient-border text-rosa text-center py-4 rounded-xl font-bold text-lg hover:bg-rosa-fundo transition flex items-center justify-center gap-2">
+                <i data-lucide="credit-card" class="w-5 h-5"></i>
+                Comprar (Pix/Cartão)
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Produto 3 -->
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover border-2 border-transparent hover:border-pink-200">
+          <div class="relative">
+            <img
+              src="https://images.unsplash.com/photo-1585751119414-ef2636f8aede?w=800&q=80"
+              alt="Óleo de Argan"
+              class="product-image w-full"
+            />
+            <div class="absolute top-4 right-4 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg" style="background-color: var(--dourado);">
+              ✨ NOVO
+            </div>
+          </div>
+
+          <div class="p-6">
+            <h3 class="text-2xl font-bold text-gray-800 mb-3">Óleo de Argan Premium</h3>
+            <p class="text-gray-600 mb-5 text-base leading-relaxed">
+              Nutrição intensa, elimina frizz e dá brilho espelhado.
+              Pode usar no cabelo seco ou úmido.
+            </p>
+
+            <div class="space-y-3">
+              <a href="#" onclick="openCheckout('logzz','oleo-argan'); return false;"
+                 class="block w-full gradient-bg text-white text-center py-4 rounded-xl font-bold text-lg hover:opacity-90 transition flex items-center justify-center gap-2 shadow-md">
+                <i data-lucide="calendar" class="w-5 h-5"></i>
+                Agendar Entrega (COD)
+              </a>
+
+              <a href="#" onclick="openCheckout('coinzz','oleo-argan'); return false;"
+                 class="block w-full gradient-border text-rosa text-center py-4 rounded-xl font-bold text-lg hover:bg-rosa-fundo transition flex items-center justify-center gap-2">
+                <i data-lucide="credit-card" class="w-5 h-5"></i>
+                Comprar (Pix/Cartão)
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Política -->
+  <section id="politica" class="py-16 px-4 bg-white">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold gradient-text mb-4">Política de Entrega</h2>
+        <p class="text-xl text-gray-600">Bem simples: a gente explica tudo direitinho 😊</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="bg-rosa-fundo rounded-2xl p-8 border-2 border-pink-200">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="gradient-bg text-white p-4 rounded-full shadow-lg">
+              <i data-lucide="package" class="w-8 h-8"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800">Logzz - Pague na Entrega (COD)</h3>
+          </div>
+
+          <ul class="space-y-4 text-gray-700 text-lg">
+            <li class="flex items-start gap-3">
+              <i data-lucide="check-circle" class="w-6 h-6 text-rosa mt-0.5"></i>
+              <span><strong>Você recebe primeiro, paga depois.</strong></span>
+            </li>
+            <li class="flex items-start gap-3">
+              <i data-lucide="check-circle" class="w-6 h-6 text-rosa mt-0.5"></i>
+              <span>Precisa ter <strong>um adulto</strong> no local para receber e pagar.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <i data-lucide="check-circle" class="w-6 h-6 text-rosa mt-0.5"></i>
+              <span>Se não tiver ninguém, o pedido <strong>pode voltar</strong> e gerar custo.</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="rounded-2xl p-8 border-2 border-yellow-300" style="background-color:#fef9e7;">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="text-white p-4 rounded-full shadow-lg" style="background-color: var(--dourado);">
+              <i data-lucide="credit-card" class="w-8 h-8"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800">Coinzz - Pagamento Online</h3>
+          </div>
+
+          <ul class="space-y-4 text-gray-700 text-lg">
+            <li class="flex items-start gap-3">
+              <i data-lucide="check-circle" class="w-6 h-6 mt-0.5" style="color: var(--dourado-escuro);"></i>
+              <span>Pague com <strong>Pix, Cartão ou Boleto</strong>.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <i data-lucide="check-circle" class="w-6 h-6 mt-0.5" style="color: var(--dourado-escuro);"></i>
+              <span>Pedido com envio normal e <strong>mais agilidade</strong>.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COD -->
+  <section id="cod" class="py-16 px-4 bg-rosa-fundo">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold gradient-text mb-4">O que é COD no Brasil?</h2>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-lg p-8 border-2 border-pink-100">
+        <div class="space-y-6 text-gray-700 text-xl leading-relaxed">
+          <p><strong>COD</strong> significa <strong>Pague na Entrega</strong>. Você faz o pedido e só paga quando o produto chega.</p>
+
+          <div class="bg-rosa-fundo rounded-xl p-6 border-2 border-pink-200">
+            <h3 class="font-bold text-rosa mb-4 text-2xl">📦 Passo a passo:</h3>
+            <ol class="space-y-3 list-decimal list-inside">
+              <li>Você faz o pedido aqui no site</li>
+              <li>O produto entra em rota de entrega</li>
+              <li>Chegando na sua casa, você confere</li>
+              <li>Você paga na hora (dinheiro/cartão)</li>
+            </ol>
+          </div>
+
+          <div class="bg-green-50 border-l-4 border-green-500 p-6 rounded-r-xl">
+            <p class="text-green-800 text-lg">
+              <strong>💡 Dica:</strong> COD é ótimo pra quem tem medo de comprar online. É simples e seguro.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contato -->
+  <section id="contato" class="py-16 px-4 bg-white">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold gradient-text mb-4">Fale Conosco</h2>
+        <p class="text-xl text-gray-600">A gente te ajuda sem complicação.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="bg-rosa-fundo rounded-2xl p-8 text-center border-2 border-pink-200">
+          <div class="gradient-bg text-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+            <i data-lucide="mail" class="w-10 h-10"></i>
+          </div>
+          <h3 class="text-2xl font-bold text-gray-800 mb-2">E-mail</h3>
+          <a href="mailto:flashstore@gmail.com" class="text-rosa font-bold text-xl hover:underline">
+            flashstore@gmail.com
+          </a>
+        </div>
+
+        <div class="bg-green-50 rounded-2xl p-8 text-center border-2 border-green-200">
+          <div class="bg-green-500 text-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+            <i data-lucide="phone" class="w-10 h-10"></i>
+          </div>
+          <h3 class="text-2xl font-bold text-gray-800 mb-2">WhatsApp</h3>
+          <a
+            href="https://wa.me/5511940012239?text=Ol%C3%A1%2C%20preciso%20de%20suporte%20para%20minhas%20d%C3%BAvidas."
+            target="_blank"
+            rel="noopener"
+            class="text-green-600 font-bold text-xl hover:underline"
+          >
+            (11) 94001-2239
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="gradient-bg text-white py-10 px-4">
+    <div class="max-w-7xl mx-auto text-center">
+      <p class="text-white/90 text-lg">© 2026 Shopping da Mulher. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- WhatsApp flutuante -->
+  <a
+    href="https://wa.me/5511940012239?text=Ol%C3%A1%2C%20preciso%20de%20suporte%20para%20minhas%20d%C3%BAvidas."
+    target="_blank"
+    rel="noopener"
+    class="whatsapp-float fixed bottom-6 right-6 bg-green-500 text-white p-4 rounded-full shadow-2xl hover:bg-green-600 transition z-50 flex items-center gap-2"
+    aria-label="Abrir WhatsApp"
+  >
+    <i data-lucide="message-circle" class="w-6 h-6"></i>
+    <span class="font-semibold hidden md:inline">Dúvidas?</span>
+  </a>
+
+  <!-- Modal -->
+  <div id="checkoutModal" class="modal">
+    <div class="modal-content p-8">
+      <div class="text-center mb-6">
+        <div id="modalIcon" class="mx-auto mb-4"></div>
+        <h3 id="modalTitle" class="text-2xl font-bold text-gray-800 mb-2"></h3>
+        <p id="modalDescription" class="text-gray-600"></p>
+      </div>
+      <div class="space-y-4">
+        <a id="checkoutLink" href="#" target="_blank" rel="noopener"
+           class="block w-full gradient-bg text-white text-center py-4 rounded-xl font-semibold hover:opacity-90 transition">
+          Ir para o Checkout
+        </a>
+        <button type="button" onclick="closeModal()"
+                class="block w-full bg-gray-200 text-gray-700 text-center py-4 rounded-xl font-semibold hover:bg-gray-300 transition">
+          Voltar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ======= CONFIG: cole seus links de afiliado aqui =======
+    const checkoutLinks = {
+      logzz: {
+        "progressiva-vegetal": "COLE_AQUI_SEU_LINK_LOGZZ_PROGRESSIVA",
+        "mascara-vita-a": "COLE_AQUI_SEU_LINK_LOGZZ_VITAA",
+        "oleo-argan": "COLE_AQUI_SEU_LINK_LOGZZ_ARGAN"
+      },
+      coinzz: {
+        "progressiva-vegetal": "COLE_AQUI_SEU_LINK_COINZZ_PROGRESSIVA",
+        "mascara-vita-a": "COLE_AQUI_SEU_LINK_COINZZ_VITAA",
+        "oleo-argan": "COLE_AQUI_SEU_LINK_COINZZ_ARGAN"
+      }
+    };
+
+    // ======= UI =======
+    window.addEventListener("DOMContentLoaded", () => {
+      // Ícones
+      if (window.lucide) window.lucide.createIcons();
+
+      // Menu mobile
+      const menuBtn = document.getElementById('menuBtn');
+      const mobileMenu = document.getElementById('mobileMenu');
+
+      if (menuBtn && mobileMenu) {
+        menuBtn.addEventListener('click', () => {
+          mobileMenu.classList.toggle('hidden');
+        });
+
+        mobileMenu.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+        });
+      }
+
+      // Scroll suave
+      document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', (e) => {
+          const href = a.getAttribute('href');
+          if (!href || href === '#') return;
+          const el = document.querySelector(href);
+          if (!el) return;
+          e.preventDefault();
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+    });
+
+    function openCheckout(platform, product) {
+      const modal = document.getElementById('checkoutModal');
+      const modalIcon = document.getElementById('modalIcon');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalDescription = document.getElementById('modalDescription');
+      const checkoutLink = document.getElementById('checkoutLink');
+
+      const link = (checkoutLinks?.[platform]?.[product]) || "#";
+      checkoutLink.href = link;
+
+      if (platform === 'logzz') {
+        modalIcon.innerHTML = '<div class="bg-pink-100 p-4 rounded-full inline-block"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#e91e63" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg></div>';
+        modalTitle.textContent = 'Pague na Entrega (COD)';
+        modalDescription.textContent = 'Você será redirecionado para o checkout. Pague somente quando receber o produto em casa.';
+        checkoutLink.textContent = 'Continuar (COD)';
+      } else {
+        modalIcon.innerHTML = '<div class="bg-yellow-100 p-4 rounded-full inline-block"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c9a227" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg></div>';
+        modalTitle.textContent = 'Pagamento Online';
+        modalDescription.textContent = 'Você será redirecionado para o checkout. Pague com Pix, Cartão ou Boleto de forma segura.';
+        checkoutLink.textContent = 'Continuar (Online)';
+      }
+
+      modal.classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('checkoutModal')?.classList.remove('active');
+    }
+
+    // Fecha modal clicando fora
+    document.addEventListener('click', (e) => {
+      const modal = document.getElementById('checkoutModal');
+      if (e.target === modal) closeModal();
+    });
+  </script>
+</body>
+</html>
