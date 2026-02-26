@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Shopping da Mulher</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shopping da Mulher - Produtos de Beleza</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script defer src="https://unpkg.com/lucide@latest"></script>
@@ -13,12 +13,23 @@
 <style>
 :root{
 --rosa:#e91e63;
+--rosa-escuro:#c2185b;
+--rosa-fundo:#fff0f5;
 --dourado:#d4a017;
 }
 
 body{font-family:Poppins,sans-serif}
 
-/* ===== LOGO REDONDO ===== */
+.gradient-bg{
+background:linear-gradient(135deg,var(--rosa),var(--rosa-escuro));
+}
+
+.gradient-text{
+background:linear-gradient(135deg,var(--rosa),var(--dourado));
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
 .logo-wrap{
 width:95px;
 height:95px;
@@ -29,7 +40,7 @@ display:flex;
 align-items:center;
 justify-content:center;
 overflow:hidden;
-box-shadow:0 6px 18px rgba(0,0,0,0.08);
+box-shadow:0 6px 18px rgba(0,0,0,.08);
 }
 
 .logo-img{
@@ -39,129 +50,136 @@ object-fit:contain;
 }
 
 @media(max-width:640px){
-.logo-wrap{width:70px;height:70px;border:3px solid var(--dourado)}
+.logo-wrap{width:70px;height:70px}
 .logo-img{width:160%}
 }
 
-/* animações */
-.whatsapp-float{animation:bounce 2s infinite}
+.card-hover{
+transition:.3s;
+}
+.card-hover:hover{
+transform:translateY(-6px);
+box-shadow:0 20px 40px rgba(233,30,99,.15);
+}
+
+.whatsapp-float{
+animation:bounce 2s infinite;
+}
 @keyframes bounce{
 0%,100%{transform:translateY(0)}
 50%{transform:translateY(-8px)}
 }
 
-.gradient-bg{background:linear-gradient(135deg,#e91e63,#c2185b)}
-.gradient-text{
-background:linear-gradient(135deg,#e91e63,#d4a017);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
+.hero-pattern{
+background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23e91e63' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z'/%3E%3C/g%3E%3C/svg%3E");
 }
-
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);align-items:center;justify-content:center;z-index:999}
-.modal.active{display:flex}
-.modal-box{background:#fff;border-radius:16px;padding:24px;max-width:420px;width:95%}
 </style>
 </head>
 
 <body class="bg-gray-50">
 
 <!-- HEADER -->
-<header class="bg-white shadow-sm py-4">
-<div class="max-w-6xl mx-auto flex items-center justify-between px-4">
+<header class="bg-white py-4 shadow-sm">
+<div class="max-w-7xl mx-auto flex items-center justify-between px-4">
 
 <div class="flex items-center gap-4">
-
-<!-- LOGO -->
 <div class="logo-wrap">
-<img src="logotipo.png" alt="Shopping da Mulher" class="logo-img">
+<img src="https://recebaepagueemcasa.github.io/shopping-da-mulher/logotipo.png" class="logo-img">
 </div>
-
 <div class="hidden md:block text-sm text-gray-500">Beleza Feminina com Segurança</div>
 </div>
+
+<nav class="hidden md:flex gap-6 font-semibold text-gray-600">
+<a href="#loja" class="hover:text-pink-600">Loja</a>
+<a href="#politica" class="hover:text-pink-600">Política</a>
+<a href="#cod" class="hover:text-pink-600">Sobre COD</a>
+<a href="#contato" class="hover:text-pink-600">Contato</a>
+</nav>
 
 </div>
 </header>
 
 <!-- HERO -->
-<section class="text-center py-14 px-4">
-<h1 class="text-4xl md:text-5xl font-bold mb-4">
+<section class="hero-pattern bg-rosa-fundo py-16 text-center px-4">
+<h1 class="text-4xl md:text-6xl font-bold mb-6">
 Shopping da Mulher — <span class="gradient-text">Beleza & Cuidado</span>
 </h1>
-
-<p class="text-gray-600 mb-8 text-lg">
+<p class="text-xl text-gray-600 mb-8">
 Pague só quando receber (COD) ou compre online com segurança.
 </p>
-
-<a href="#loja" class="gradient-bg text-white px-8 py-3 rounded-full font-semibold">
+<a href="#loja" class="gradient-bg text-white px-10 py-4 rounded-full font-bold">
 Ver Produtos
 </a>
 </section>
 
 <!-- PRODUTOS -->
-<section id="loja" class="py-12 px-4 max-w-6xl mx-auto grid md:grid-cols-3 gap-6">
+<section id="loja" class="py-16 px-4">
+<div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-8">
 
-<!-- PRODUTO -->
-<div class="bg-white rounded-xl shadow p-4">
-<img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&q=80" class="rounded-lg mb-4">
-<h3 class="font-bold text-lg mb-2">Progressiva Vegetal</h3>
+<!-- PRODUTO 1 -->
+<div class="bg-white rounded-2xl p-6 card-hover">
+<img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&q=80" class="rounded-xl mb-4">
+<h3 class="text-xl font-bold mb-2">Progressiva Vegetal</h3>
 <p class="text-gray-600 mb-4">Alisa, reduz volume e dá brilho intenso.</p>
-<button onclick="openCheckout('logzz')" class="w-full gradient-bg text-white py-2 rounded-lg mb-2">Agendar Entrega</button>
-<button onclick="openCheckout('coinzz')" class="w-full border border-pink-400 py-2 rounded-lg">Comprar Online</button>
+
+<a href="COLE_LINK_LOGZZ_PROGRESSIVA" class="block gradient-bg text-white py-3 rounded-lg mb-2 text-center font-semibold">Agendar Entrega (COD)</a>
+<a href="COLE_LINK_COINZZ_PROGRESSIVA" class="block border border-pink-500 py-3 rounded-lg text-center font-semibold text-pink-600">Comprar Online</a>
 </div>
 
-<div class="bg-white rounded-xl shadow p-4">
-<img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800&q=80" class="rounded-lg mb-4">
-<h3 class="font-bold text-lg mb-2">Máscara Vita A</h3>
+<!-- PRODUTO 2 -->
+<div class="bg-white rounded-2xl p-6 card-hover">
+<img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800&q=80" class="rounded-xl mb-4">
+<h3 class="text-xl font-bold mb-2">Máscara Vita A</h3>
 <p class="text-gray-600 mb-4">Hidratação profunda e reposição de massa.</p>
-<button onclick="openCheckout('logzz')" class="w-full gradient-bg text-white py-2 rounded-lg mb-2">Agendar Entrega</button>
-<button onclick="openCheckout('coinzz')" class="w-full border border-pink-400 py-2 rounded-lg">Comprar Online</button>
+
+<a href="COLE_LINK_LOGZZ_VITAA" class="block gradient-bg text-white py-3 rounded-lg mb-2 text-center font-semibold">Agendar Entrega (COD)</a>
+<a href="COLE_LINK_COINZZ_VITAA" class="block border border-pink-500 py-3 rounded-lg text-center font-semibold text-pink-600">Comprar Online</a>
 </div>
 
-<div class="bg-white rounded-xl shadow p-4">
-<img src="https://images.unsplash.com/photo-1585751119414-ef2636f8aede?w=800&q=80" class="rounded-lg mb-4">
-<h3 class="font-bold text-lg mb-2">Óleo de Argan</h3>
+<!-- PRODUTO 3 -->
+<div class="bg-white rounded-2xl p-6 card-hover">
+<img src="https://images.unsplash.com/photo-1585751119414-ef2636f8aede?w=800&q=80" class="rounded-xl mb-4">
+<h3 class="text-xl font-bold mb-2">Óleo de Argan</h3>
 <p class="text-gray-600 mb-4">Nutrição intensa e brilho espelhado.</p>
-<button onclick="openCheckout('logzz')" class="w-full gradient-bg text-white py-2 rounded-lg mb-2">Agendar Entrega</button>
-<button onclick="openCheckout('coinzz')" class="w-full border border-pink-400 py-2 rounded-lg">Comprar Online</button>
+
+<a href="COLE_LINK_LOGZZ_ARGAN" class="block gradient-bg text-white py-3 rounded-lg mb-2 text-center font-semibold">Agendar Entrega (COD)</a>
+<a href="COLE_LINK_COINZZ_ARGAN" class="block border border-pink-500 py-3 rounded-lg text-center font-semibold text-pink-600">Comprar Online</a>
 </div>
 
+</div>
+</section>
+
+<!-- POLÍTICA -->
+<section id="politica" class="py-16 bg-white text-center px-4">
+<h2 class="text-3xl font-bold gradient-text mb-6">Política de Entrega</h2>
+<p class="max-w-2xl mx-auto text-gray-600">
+No modelo COD você paga somente quando recebe. É importante ter um adulto no local para receber e efetuar o pagamento.
+</p>
+</section>
+
+<!-- COD -->
+<section id="cod" class="py-16 bg-rosa-fundo text-center px-4">
+<h2 class="text-3xl font-bold gradient-text mb-6">O que é COD?</h2>
+<p class="max-w-2xl mx-auto text-gray-600">
+COD significa Pague na Entrega. Você faz o pedido e paga apenas quando o produto chega na sua casa.
+</p>
 </section>
 
 <!-- CONTATO -->
-<section class="text-center py-12">
-<a href="https://wa.me/5511940012239?text=Olá,%20preciso%20de%20suporte" target="_blank"
+<section id="contato" class="py-16 bg-white text-center px-4">
+<h2 class="text-3xl font-bold gradient-text mb-6">Fale Conosco</h2>
+<p class="text-gray-600 mb-4">flashstore@gmail.com</p>
+<p class="text-gray-600">(11) 94001-2239</p>
+</section>
+
+<!-- WHATSAPP -->
+<a href="https://wa.me/5511940012239?text=Olá%2C%20preciso%20de%20suporte"
 class="whatsapp-float fixed bottom-6 right-6 bg-green-500 text-white px-4 py-3 rounded-full shadow-lg">
 WhatsApp
 </a>
-</section>
-
-<!-- MODAL -->
-<div id="modal" class="modal">
-<div class="modal-box text-center">
-<h3 class="text-xl font-bold mb-4">Redirecionando para o checkout</h3>
-<a id="checkoutLink" href="#" target="_blank"
-class="gradient-bg text-white px-6 py-2 rounded-lg inline-block mb-2">Continuar</a>
-<br>
-<button onclick="closeModal()" class="text-gray-500">Cancelar</button>
-</div>
-</div>
 
 <script>
 window.addEventListener("DOMContentLoaded",()=>{lucide.createIcons()})
-
-const links={
-logzz:"COLE_AQUI_LINK_LOGZZ",
-coinzz:"COLE_AQUI_LINK_COINZZ"
-}
-
-function openCheckout(tipo){
-document.getElementById("checkoutLink").href=links[tipo]||"#"
-document.getElementById("modal").classList.add("active")
-}
-
-function closeModal(){
-document.getElementById("modal").classList.remove("active")
-}
 </script>
 
 </body>
